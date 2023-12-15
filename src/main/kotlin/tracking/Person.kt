@@ -13,6 +13,8 @@ class Person(
     var age = 0
     private val jobs: MutableList<Company> = mutableListOf()
     private val bankAccounts: MutableList<BankAccount> = mutableListOf()
+    private val children: MutableList<Person> = mutableListOf()
+
     private var salaryIndex = -1;
     var salary = 0
 
@@ -23,6 +25,11 @@ class Person(
 
     fun removeBankAccount(account: BankAccount): Person {
         bankAccounts -= account
+        return this
+    }
+
+    fun addChildren(person: Person): Person {
+        children += person
         return this
     }
 
@@ -46,4 +53,25 @@ class Person(
     fun getJobs() = jobs
 
     fun getSalaryAccount() = bankAccounts[salaryIndex]
+
+    fun rob(person: Person, amount: Int) {
+        if (person.bankAccounts.isNotEmpty()) {
+            person.getBankAccount(0).pay(this.getBankAccount(0), amount)
+        }
+    }
+
+    fun die() {
+        var totalMoney = 0
+        for (bankAccount in bankAccounts) {
+            totalMoney += bankAccount.balance
+        }
+
+        val inheritanceMoney = totalMoney/children.count()
+
+        for (child in children) {
+            if (child.getBankAccounts().isNotEmpty()) {
+                child.getBankAccount(0).balance += inheritanceMoney
+            }
+        }
+    }
 }
